@@ -44,8 +44,11 @@ def goodWord(word, remaining_letters, num_of_good_letters):
     if remaining_letters == []:
         return 0
     for i in range(num_of_good_letters):
-        if remaining_letters[i-1] in word:
-            counter += 1
+        try:
+            if remaining_letters[i-1] in word:
+                counter += 1
+        except:
+            pass
     return counter
 
 def processAnswer(word, clue, yellow_letters, yellow_positions, black_letters, green_letters, green_positions, double_yellow_letters):
