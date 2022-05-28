@@ -1,3 +1,4 @@
+from xml.sax import make_parser
 import pyautogui
 import time
 
@@ -11,7 +12,7 @@ def color(x, y):
         return "g"
     if pyautogui.pixelMatchesColor(x, y, yellow_color):
         return "y"
-    return ""
+    return "n"
 
 def green(word, letters, positions):
     for i in range(len(letters)):
@@ -51,9 +52,10 @@ def goodWord(word, remaining_letters, num_of_good_letters):
             pass
     return counter
 
-def processAnswer(word, clue, yellow_letters, yellow_positions, black_letters, green_letters, green_positions, double_yellow_letters):
+def processAnswer(word, clue, yellow_letters, yellow_positions, black_letters, green_letters, green_positions, double_yellow_letters, guessed_words):
     possible_guesses = []
     new_yellow_letters = []
+    new_green_letters = []
     letters = []
 
     position = 0
@@ -62,6 +64,7 @@ def processAnswer(word, clue, yellow_letters, yellow_positions, black_letters, g
         if letter == "G":
             green_letters.append(word[position])
             green_positions.append(position)
+            new_green_letters.append(word[position])
         elif letter == "Y":
             yellow_letters.append(word[position])
             yellow_positions.append(position)
@@ -74,6 +77,8 @@ def processAnswer(word, clue, yellow_letters, yellow_positions, black_letters, g
 
     for letter in black_letters:
         if letter in green_letters:
+            black_letters.remove(letter)
+        elif letter in yellow_letters:
             black_letters.remove(letter)
 
     for letter in yellow_letters:
@@ -90,6 +95,12 @@ def processAnswer(word, clue, yellow_letters, yellow_positions, black_letters, g
         for word in word_list_complete:
             if green(word, green_letters, green_positions) and yellow(word, yellow_letters, yellow_positions) and black(word, black_letters):
                 possible_guesses.append(word)
+
+    for word in guessed_words:
+        try:
+            guessed_words.remove(word)
+        except:
+            pass
 
     a = 0
     b = 0
@@ -223,18 +234,19 @@ def processAnswer(word, clue, yellow_letters, yellow_positions, black_letters, g
 
     if len(possible_guesses) > 1:
         if not remaining_words == []:
-            print("Number of remaining words:", len(remaining_words))
+            print("Number of possible words:", len(possible_guesses))
             choice = remaining_words[0][1].lower()
         else:
             print("Number of possible words:", len(possible_guesses))
             choice = possible_guesses[0].lower()
     else:
+        print("Number of possible words:", len(possible_guesses))
         choice = possible_guesses[0]
 
     print(choice)
     return choice
 
-def play(guess, num_of_guesses):
+def play(guess, num_of_guesses, guessed_words):
     clue = ""
     for x in x_list:
         y = y_list[num_of_guesses]
@@ -244,11 +256,15 @@ def play(guess, num_of_guesses):
     print(clue)
 
     if not clue == "GGGGG":
-        num_of_guesses += 1
-        return processAnswer(guess, clue, yellow_letters, yellow_positions, black_letters, green_letters, green_positions, double_yellow_letters)
+        if color(x_list[-1], y_list[-1]) != "n":
+            print("You lost!")
+            return "STOPP"
+        return processAnswer(guess, clue, yellow_letters, yellow_positions, black_letters, green_letters, green_positions, double_yellow_letters, guessed_words)
     else:
         print("You won!")
         return "STOPP"
+
+pyautogui.click(700, 500)
 
 while True:
     guess = "arose"
@@ -260,7 +276,7 @@ while True:
     yellow_color = (181, 159, 59)
 
     num_of_guesses = 0
-    pyautogui.click(700, 500)
+    pyautogui.moveTo(1800, 500)
     for letter in list(guess):
         pyautogui.press(letter)
     pyautogui.press('enter')
@@ -272,16 +288,18 @@ while True:
     yellow_letters = []
     yellow_positions = []
     double_yellow_letters = []
+    guessed_words = []
 
     while num_of_guesses < 6:
-        guess = play(guess, num_of_guesses)
+        guess = play(guess, num_of_guesses, guessed_words)
+        guessed_words.append(guess)
         num_of_guesses += 1
         if guess == "STOPP":
             time.sleep(3)
             pyautogui.click(266, 786)
+            time.sleep(0.05)
             break
 
-        pyautogui.click(700, 500)
         for letter in list(guess.lower()):
             pyautogui.press(letter)
         pyautogui.press('enter')
