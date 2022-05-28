@@ -44,13 +44,17 @@ def goodWord(word, remaining_letters, num_of_good_letters):
     if remaining_letters == []:
         return 0
     for i in range(num_of_good_letters):
-        if remaining_letters[i-1] in word:
-            counter += 1
+        try:
+            if remaining_letters[i-1] in word:
+                counter += 1
+        except:
+            pass
     return counter
 
 def processAnswer(word, clue, yellow_letters, yellow_positions, black_letters, green_letters, green_positions, double_yellow_letters):
     possible_guesses = []
     new_yellow_letters = []
+    new_green_letters = []
     letters = []
 
     position = 0
@@ -59,6 +63,7 @@ def processAnswer(word, clue, yellow_letters, yellow_positions, black_letters, g
         if letter == "G":
             green_letters.append(word[position])
             green_positions.append(position)
+            new_green_letters.append(word[position])
         elif letter == "Y":
             yellow_letters.append(word[position])
             yellow_positions.append(position)
@@ -71,6 +76,8 @@ def processAnswer(word, clue, yellow_letters, yellow_positions, black_letters, g
 
     for letter in black_letters:
         if letter in green_letters:
+            black_letters.remove(letter)
+        elif letter in yellow_letters:
             black_letters.remove(letter)
 
     for letter in yellow_letters:
@@ -242,7 +249,7 @@ def play(guess, num_of_guesses):
     else:
         print("You won!")
         return "STOPP"
-    
+
 while num_of_guesses < 6:
     guess = play(guess, num_of_guesses)
     if guess == "STOPP":
