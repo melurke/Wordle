@@ -135,7 +135,7 @@ def processAnswer(word, clue, yellow_letters, yellow_positions, black_letters, g
 
     for word in guessed_words:
         try:
-            guessed_words.remove(word)
+            possible_guesses.remove(word)
         except:
             pass
 
