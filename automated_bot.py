@@ -1,4 +1,3 @@
-from xml.sax import make_parser
 import pyautogui
 import time
 
@@ -297,8 +296,7 @@ while True:
         if guess == "STOPP":
             time.sleep(3)
             pyautogui.click(266, 786)
-            while not pyautogui.pixelMatchesColor(320, 190, (18, 18, 19)):
-                time.sleep(0.1)
+            time.sleep(0.05)
             break
 
         for letter in list(guess.lower()):
