@@ -297,7 +297,8 @@ while True:
         if guess == "STOPP":
             time.sleep(3)
             pyautogui.click(266, 786)
-            time.sleep(0.05)
+            while not pyautogui.pixelMatchesColor(320, 190, (18, 18, 19)):
+                time.sleep(0.1)
             break
 
         for letter in list(guess.lower()):
