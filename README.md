@@ -10,6 +10,8 @@ probability.py -> Program to calculate how often each letter is found in the wor
 
 bot.py -> Bot for the game Wordle that can guess the answer (best version)
 
+bot_automated.py -> Bot from bot.py automated to press the buttons to play the game
+
 starting_word.py -> Program that calculates the best starting word for bot.py (the top 3 words are trace, salet and crate)
 
 random_bot.py -> Bot for the game Wordle that guesses a random possible word
