@@ -10,7 +10,9 @@ def green(word, green_letters, green_positions): # Check if a word contains all 
 
 def yellow(word, yellow_letters, yellow_positions): # Check if a word contains all the yellow letters in new spots
     for index, letter in enumerate(yellow_letters):
-        if word[yellow_positions[index]] == letter or not letter in word:
+        if word[yellow_positions[index]] == letter:
+            return False
+        elif not letter in word:
             return False
     return True
 
@@ -33,7 +35,13 @@ def colors(guess, solution): # Return the clue the game would give on a guess fo
             clue += 'B'
     return clue
 
-def addLetters(clue, green_letters, green_positions, yellow_letters, yellow_positions, black_letters): # Add all of the neccessary letters to the lists for the different colors
+def addLetters(guess, clue): # Add all of the neccessary letters to the lists for the different colors
+    green_letters = []
+    green_positions = []
+    yellow_letters = []
+    yellow_positions = []
+    black_letters = []
+
     for index, letter in enumerate(clue):
         if letter == 'G':
             green_letters.append(guess[index])
@@ -49,12 +57,20 @@ def addLetters(clue, green_letters, green_positions, yellow_letters, yellow_posi
         if letter in green_letters or letter in yellow_letters:
           black_letters.remove(letter)
 
+    return [green_letters, green_positions, yellow_letters, yellow_positions, black_letters]
+
 def play(guess, clue, word_list, all_words, green_letters, green_positions, yellow_letters, yellow_positions, black_letters): # Return the next guess
     possible_solutions = []
     clue = clue.upper()
     clues = []
     
-    addLetters(clue, green_letters, green_positions, yellow_letters, yellow_positions, black_letters) # Add all the letters from the clue
+    # Add all the letters from the clue:
+    new_lists = addLetters(guess, clue)
+    green_letters += new_lists[0]
+    green_positions += new_lists[1]
+    yellow_letters += new_lists[2]
+    yellow_positions += new_lists[3]
+    black_letters += new_lists[4]
 
     for word in word_list: # Check for all of the possible solutions with the new information from the clue
         if green(word, green_letters, green_positions) and yellow(word, yellow_letters, yellow_positions) and black(word, black_letters):
