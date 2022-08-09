@@ -16,7 +16,7 @@ def yellow(word, yellow_letters, yellow_positions): # Check if a word contains a
             return False
     return True
 
-def black(word, black_letters): # Check if a word contains none of the black letters
+def black(word, black_letters, green_letters, green_positions): # Check if a word contains none of the black letters
     for letter in black_letters:
         if letter in word:
             return False
@@ -59,7 +59,7 @@ def addLetters(guess, clue): # Add all of the neccessary letters to the lists fo
 
     return [green_letters, green_positions, yellow_letters, yellow_positions, black_letters]
 
-def play(guess, clue, word_list, all_words, green_letters, green_positions, yellow_letters, yellow_positions, black_letters): # Return the next guess
+def play(guess, clue, guessed_words, word_list, all_words, green_letters, green_positions, yellow_letters, yellow_positions, black_letters): # Return the next guess
     possible_solutions = []
     clue = clue.upper()
     clues = []
@@ -73,8 +73,13 @@ def play(guess, clue, word_list, all_words, green_letters, green_positions, yell
     black_letters += new_lists[4]
 
     for word in word_list: # Check for all of the possible solutions with the new information from the clue
-        if green(word, green_letters, green_positions) and yellow(word, yellow_letters, yellow_positions) and black(word, black_letters):
+        if green(word, green_letters, green_positions) and yellow(word, yellow_letters, yellow_positions) and black(word, black_letters, green_letters, green_positions):
             possible_solutions.append(word)
+    for word in guessed_words:
+        try:
+            possible_solutions.remove(word)
+        except:
+            pass
     print(f'Number of possible solutions: {len(possible_solutions)}')
 
     if len(possible_solutions) == 1:
@@ -101,6 +106,7 @@ while True: # Loop for multiple rounds of Wordle to test how well the bot perfor
     yellow_letters = []
     yellow_positions = []
     black_letters = []
+    guessed_words = []
 
     guess = 'trace'
 
@@ -110,6 +116,7 @@ while True: # Loop for multiple rounds of Wordle to test how well the bot perfor
         if clue.upper() == 'GGGGG':
             print('You won!\n\n------------------------------------')
             break
-        guess = play(guess, clue, word_list, all_words, green_letters, green_positions, yellow_letters, yellow_positions, black_letters) # Find out the next guess
+        guess = play(guess, clue, guessed_words, word_list, all_words, green_letters, green_positions, yellow_letters, yellow_positions, black_letters) # Find out the next guess
+        guessed_words.append(guess)
         if guess == 'BREAK':
             break

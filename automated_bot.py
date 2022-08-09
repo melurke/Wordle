@@ -5,7 +5,7 @@ all_words = word_list + word_list_complete
 import pyautogui
 import time
 
-def color(x, y):
+def color(x, y): # Check which color a given pixel matches (black, yellow or green)
     if pyautogui.pixelMatchesColor(x, y, black_color):
         return "b"
     if pyautogui.pixelMatchesColor(x, y, green_color):
@@ -28,10 +28,13 @@ def yellow(word, yellow_letters, yellow_positions): # Check if a word contains a
             return False
     return True
 
-def black(word, black_letters): # Check if a word contains none of the black letters
+def black(word, black_letters, green_letters, green_positions): # Check if a word contains none of the black letters
     for letter in black_letters:
         if letter in word:
-            return False
+            if letter in green_letters and word[word.index(letter)] == letter:
+                pass
+            else:
+                return False
     return True
 
 def colors(guess, solution): # Return the clue the game would give on a guess for a given solution
@@ -71,7 +74,21 @@ def addLetters(guess, clue): # Add all of the neccessary letters to the lists fo
 
     return [green_letters, green_positions, yellow_letters, yellow_positions, black_letters]
 
-def play(guess, clue, word_list, all_words, green_letters, green_positions, yellow_letters, yellow_positions, black_letters): # Return the next guess
+def enterGuess(guess): # Enter a given word by pressing the buttons
+    pyautogui.moveTo(1800, 500)
+    for letter in guess:
+        pyautogui.press(letter)
+    pyautogui.press('enter')
+    time.sleep(2)
+
+def restart(): # Restart the game after winning or losing
+    time.sleep(3)
+    pyautogui.click(266, 786)
+    while not pyautogui.pixelMatchesColor(320, 190, (18, 18, 19)):
+        time.sleep(0.1)
+    return
+
+def play(guess, clue, guessed_words, word_list, all_words, green_letters, green_positions, yellow_letters, yellow_positions, black_letters): # Return the next guess
     possible_solutions = []
     clue = clue.upper()
     clues = []
@@ -85,17 +102,18 @@ def play(guess, clue, word_list, all_words, green_letters, green_positions, yell
     black_letters += new_lists[4]
 
     for word in word_list: # Check for all of the possible solutions with the new information from the clue
-        if green(word, green_letters, green_positions) and yellow(word, yellow_letters, yellow_positions) and black(word, black_letters):
+        if green(word, green_letters, green_positions) and yellow(word, yellow_letters, yellow_positions) and black(word, black_letters, green_letters, green_positions):
             possible_solutions.append(word)
+    for word in guessed_words:
+        try:
+            possible_solutions.remove(word) # Remove the words already guessed if neccessary (otherwise it can happen that the bot guesses the same word over and over again)
+        except:
+            pass
     print(f'Number of possible solutions: {len(possible_solutions)}')
 
-    if len(possible_solutions) == 1:
-        print(f'You won! The solution is {possible_solutions[0]}!\n\n------------------------------------')
-        pyautogui.moveTo(1800, 500)
-        for letter in list(possible_solutions[0]):
-            pyautogui.press(letter)
-        pyautogui.press('enter')
-        time.sleep(2)
+    if len(possible_solutions) == 1: # Print the solution if there is only one left
+        print(f'\nYou won! The solution is {possible_solutions[0]}!\n\n------------------------------------')
+        enterGuess(possible_solutions[0])
         return 'BREAK'
     elif len(possible_solutions) == 2: # If there are two or less solutions left, just return one of them
         return possible_solutions[0]
@@ -126,39 +144,31 @@ while True: # Loop for multiple rounds of Wordle to test how well the bot perfor
     yellow_letters = []
     yellow_positions = []
     black_letters = []
+    guessed_words = []
 
     guess = 'trace'
     num_of_guesses = 0
 
     while num_of_guesses < 6: # Game loop for 1 round of Wordle
         print(f'\nThe guess is {guess}') # Print the next guess
-
-        pyautogui.moveTo(1800, 500)
-        for letter in list(guess):
-            pyautogui.press(letter)
-        pyautogui.press('enter')
-        time.sleep(2)
+        enterGuess(guess) # Enter the next guess
 
         clue = ''
-        for x in x_list:
+        for x in x_list: # Check for the colors of the pixels to get the clue
             y = y_list[num_of_guesses]
             clue += color(x, y)
-
         clue = clue.upper()
+        
         num_of_guesses += 1
         print(f'The clue is {clue}')
 
-        if clue == 'GGGGG':
+        if clue == 'GGGGG': # If all letters are green, you won
             print('You won!\n\n------------------------------------')
-            time.sleep(3)
-            pyautogui.click(266, 786)
-            while not pyautogui.pixelMatchesColor(320, 190, (18, 18, 19)):
-                time.sleep(0.1)
+            restart()
             break
-        guess = play(guess, clue, word_list, all_words, green_letters, green_positions, yellow_letters, yellow_positions, black_letters) # Find out the next guess
+
+        guess = play(guess, clue, guessed_words, word_list, all_words, green_letters, green_positions, yellow_letters, yellow_positions, black_letters) # Find out the next guess
+        guessed_words.append(guess)
         if guess == 'BREAK':
-            time.sleep(3)
-            pyautogui.click(266, 786)
-            while not pyautogui.pixelMatchesColor(320, 190, (18, 18, 19)):
-                time.sleep(0.1)
+            restart()
             break

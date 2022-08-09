@@ -23,8 +23,19 @@ automated_bot.py / automated_good_bot.py -> Automated versions from filler_bot_f
 
 ## Performance
 
+The data was gathered using the website worldeunlimited.org and the automated versions of the bots.
+
+### Current best bot
+
+<img src="data_new.png">
+
+This data was gathered using the Bot from automated_bot.py.
+The average number of guesses per word from the 350 games played is around 3,51.
+
+### Previous best bot
+
 <img src="data.png">
 
 
-This data was gathered with the Bot from good_bot.py using the website wordleunlimited.org.
-The average number of guesses per word from the 309 games played is around 3.88.
+This data was gathered with the Bot from automated_good_bot.py.
+The average number of guesses per word from the 309 games played is around 3,88.
