@@ -27,14 +27,14 @@ The data was gathered using the website worldeunlimited.org and the automated ve
 
 ### Current best bot
 
-<img src="data_new.png">
+<img src="data/images/data_new.png">
 
 This data was gathered using the Bot from automated_bot.py.
 The average number of guesses per word from the 350 games played is around 3,51.
 
 ### Previous best bot
 
-<img src="data.png">
+<img src="data/images/data.png">
 
 
 This data was gathered with the Bot from automated_good_bot.py.

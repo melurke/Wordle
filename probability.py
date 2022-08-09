@@ -1,7 +1,7 @@
 word_list = []
 word_list_complete = []
-word_file = open("word_list.txt")
-word_file_complete = open("word_list_complete.txt")
+word_file = open("data/word_lists/word_list.txt")
+word_file_complete = open("data/word_lists/word_list_complete.txt")
 
 for word in word_file:
     word_list.append(word.strip())
@@ -121,15 +121,12 @@ print('x:', x)
 print('y:', y)
 print('z:', z)
 
-
-
 letters = [a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z]
 letter = []
 
 for i in letters:
     i = i/num_of_words
     letter.append(i)
-
 
 letters.sort(), letters.reverse()
 

@@ -13,12 +13,12 @@ def generateClue(guess, solution): # Return the clue the game would give on a gu
             clue += "B"
     return clue
 
-with open("word_list.txt", "r") as file:
+with open("data/word_lists/word_list.txt", "r") as file:
     word_list = []
     for line in file:
         word_list.append(line.strip())
 
-with open("word_list_complete.txt", "r") as file:
+with open("data/word_lists/word_list_complete.txt", "r") as file:
     word_list_complete = []
     for line in file:
         word_list_complete.append(line.strip())
