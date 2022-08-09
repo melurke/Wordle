@@ -1,10 +1,10 @@
 # Wordle
 
-game.py -> The game of Wordle (unfinished)
+game.py -> The game of Wordle to play in the terminal
 
 word_list.txt -> List of words that can be the answer
 
-word_list_complete.txt -> List of words that can't be the answer but can be guessed
+word_list_complete.txt -> List of all words including those that can be guessed but can't be the answer
 
 probability.py -> Program to calculate how often each letter is found in the word list
 

@@ -1,85 +1,47 @@
 import random
 
-def processGuess(answer, guess, double_letter, letter_double):
-    position = 0
+def generateClue(guess, solution): # Return the clue the game would give on a guess for a given solution
+    solution_list = list(solution).copy()
     clue = ""
-    secret_word = answer
-    guessed_double_letter = False
-
-    for letter in guess:
-        if double_letter:
-            if letter == letter_double and guessed_double_letter:
-                clue += "B"
-            elif letter == letter_double:
-                guessed_double_letter = True
-                
-                if letter == secret_word[position]:
-                    clue += "G"
-                elif letter in secret_word:
-                    clue += "Y"
-                else:
-                    clue += "B"
-            else:
-                if letter == secret_word[position]:
-                    clue += "G"
-                elif letter in secret_word:
-                    clue += "Y"
-                else:
-                    clue += "B"
+    for index, letter in enumerate(guess):
+        if letter == solution[index]:
+            clue += "G"
+        elif letter in solution_list:
+            solution_list.remove(letter)
+            clue += "Y"
         else:
-            if letter == secret_word[position]:
-                clue += "G"
-            elif letter in secret_word:
-                clue += "Y"
-            else:
-                clue += "B"
+            clue += "B"
+    return clue
 
-        position += 1
+with open("word_list.txt", "r") as file:
+    word_list = []
+    for line in file:
+        word_list.append(line.strip())
 
-    print(clue)
+with open("word_list_complete.txt", "r") as file:
+    word_list_complete = []
+    for line in file:
+        word_list_complete.append(line.strip())
 
-    return clue == "GGGGG"
+word_list.sort()
+word_list_complete.sort()
 
-word_list = []
-word_file = open("word_list.txt")
-word_list_complete = []
-word_file_complete = open("word_list_complete.txt")
+solution = random.choice(word_list)
+won_game = False
 
-for word in word_file:
-    word_list.append(word.strip())
-
-for word in word_file_complete:
-    word_list_complete.append(word.strip())
-
-answer = random.choice(word_list)
-
-num_of_guesses = 0
-guessed_correctly = False
-
-while num_of_guesses < 6 and not guessed_correctly:
-    guess = input("Type a 5-letter word: ")
-
+for num_of_guesses in range(1, 7):
+    guess = ""
     while not guess in word_list_complete:
-        print("Your guess is not in the word list. Please try again.")
-        guess = input("Type a 5-letter word: ")
-
-    print("You have guessed " + guess + ".")
+        guess = input(f"\nWhat is your {num_of_guesses}. guess? ").lower()
+        if not guess in word_list_complete:
+            print("The guess is not valid. Please try again:")
+    clue = generateClue(guess, solution)
+    print(f"The clue is {clue}")
+    if clue == "GGGGG":
+        print(f"Congratulations! You won the game in {num_of_guesses} guesses!")
+        won_game = True
+        break
     num_of_guesses += 1
 
-    double_letter = False
-    letter_double = ""
-
-    letters = []
-
-    for i in range(0, len(guess)):
-        if guess[i] in letters:
-            double_letter = True
-            letter_double = guess[i]
-        letters.append(guess[i])
-
-    if processGuess(answer, guess, double_letter, letter_double):
-        print("Congratulations! You have guessed the word in", num_of_guesses, "guesses!")
-        guessed_correctly = True
-            
-if not guessed_correctly:    
-    print("You have run out of tries. The word was " + answer + ".")
+if not won_game:
+    print(f"\nYou have run out of guesses! The solution was {solution}.")
