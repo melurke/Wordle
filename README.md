@@ -1,5 +1,7 @@
 # Wordle
 
+## Files
+
 game.py -> The game of Wordle to play in the terminal
 
 word_list.txt -> List of words that can be the answer
@@ -35,7 +37,6 @@ The average number of guesses per word from the 350 games played is around 3,51.
 ### Previous best bot
 
 <img src="data/images/data.png">
-
 
 This data was gathered with the Bot from automated_good_bot.py.
 The average number of guesses per word from the 309 games played is around 3,88.
