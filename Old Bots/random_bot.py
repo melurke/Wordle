@@ -76,5 +76,9 @@ def play(guess):
         
     num_of_guesses += 1
 
-while not guessed_correctly or num_of_guesses < 6:
-    guess = play(guess)
+def main():
+    while not guessed_correctly or num_of_guesses < 6:
+        guess = play(guess)
+
+if __name__ == "__main__":
+    main()

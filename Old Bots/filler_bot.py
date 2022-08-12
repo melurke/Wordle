@@ -312,44 +312,56 @@ def play(guess, num_of_guesses, guessed_words):
         print("You won!")
         return "STOPP"
 
-pyautogui.click(700, 500)
+x_list = [320, 411, 502, 593, 684]
+y_list = [190, 281, 372, 463, 554, 645]
+black_color = (58, 58, 60)
+green_color = (83, 141, 78)
+yellow_color = (181, 159, 59)
 
-while True:
-    guess = "arose"
-    print("Initial guess:", guess)
-    x_list = [320, 411, 502, 593, 684]
-    y_list = [190, 281, 372, 463, 554, 645]
-    black_color = (58, 58, 60)
-    green_color = (83, 141, 78)
-    yellow_color = (181, 159, 59)
+green_letters = []
+green_positions = []
+black_letters = []
+yellow_letters = []
+yellow_positions = []
+double_yellow_letters = []
 
-    num_of_guesses = 0
-    pyautogui.moveTo(1800, 500)
-    for letter in list(guess):
-        pyautogui.press(letter)
-    pyautogui.press('enter')
-    time.sleep(2)
+def main():
+    pyautogui.click(700, 500)
 
-    green_letters = []
-    green_positions = []
-    black_letters = []
-    yellow_letters = []
-    yellow_positions = []
-    double_yellow_letters = []
-    guessed_words = []
+    while True:
+        guess = "arose"
+        print("Initial guess:", guess)
 
-    while num_of_guesses < 6:
-        guess = play(guess, num_of_guesses, guessed_words)
-        guessed_words.append(guess)
-        num_of_guesses += 1
-        if guess == "STOPP":
-            time.sleep(3)
-            pyautogui.click(266, 786)
-            while not pyautogui.pixelMatchesColor(320, 190, (18, 18, 19)):
-                time.sleep(0.1)
-            break
-
-        for letter in list(guess.lower()):
+        num_of_guesses = 0
+        pyautogui.moveTo(1800, 500)
+        for letter in list(guess):
             pyautogui.press(letter)
         pyautogui.press('enter')
         time.sleep(2)
+
+        green_letters = []
+        green_positions = []
+        black_letters = []
+        yellow_letters = []
+        yellow_positions = []
+        double_yellow_letters = []
+        guessed_words = []
+
+        while num_of_guesses < 6:
+            guess = play(guess, num_of_guesses, guessed_words)
+            guessed_words.append(guess)
+            num_of_guesses += 1
+            if guess == "STOPP":
+                time.sleep(3)
+                pyautogui.click(266, 786)
+                while not pyautogui.pixelMatchesColor(320, 190, (18, 18, 19)):
+                    time.sleep(0.1)
+                break
+
+            for letter in list(guess.lower()):
+                pyautogui.press(letter)
+            pyautogui.press('enter')
+            time.sleep(2)
+
+if __name__ == "__main__":
+    main()

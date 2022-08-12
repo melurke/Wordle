@@ -294,23 +294,34 @@ def play(guess, guessed_words):
         print("You won!")
         return "STOPP"
 
-while True:
-    guess = "soare"
-    print("Initial guess:", guess)
+green_letters = []
+green_positions = []
+black_letters = []
+yellow_letters = []
+yellow_positions = []
+double_yellow_letters = []
 
-    num_of_guesses = 0
+def main():
+    while True:
+        guess = "soare"
+        print("Initial guess:", guess)
 
-    green_letters = []
-    green_positions = []
-    black_letters = []
-    yellow_letters = []
-    yellow_positions = []
-    double_yellow_letters = []
-    guessed_words = []
+        num_of_guesses = 0
 
-    while num_of_guesses < 6:
-        guess = play(guess, guessed_words)
-        guessed_words.append(guess)
-        num_of_guesses += 1
-        if guess == "STOPP":
-            break
+        green_letters = []
+        green_positions = []
+        black_letters = []
+        yellow_letters = []
+        yellow_positions = []
+        double_yellow_letters = []
+        guessed_words = []
+
+        while num_of_guesses < 6:
+            guess = play(guess, guessed_words)
+            guessed_words.append(guess)
+            num_of_guesses += 1
+            if guess == "STOPP":
+                break
+
+if __name__ == "__main__":
+    main()

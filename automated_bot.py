@@ -135,40 +135,44 @@ black_color = (58, 58, 60)
 green_color = (83, 141, 78)
 yellow_color = (181, 159, 59)
 
-pyautogui.click(700, 500)
+def main():
+    pyautogui.click(700, 500)
 
-while True: # Loop for multiple rounds of Wordle to test how well the bot performs
-    # Reset all of the letters:
-    green_letters = []
-    green_positions = []
-    yellow_letters = []
-    yellow_positions = []
-    black_letters = []
-    guessed_words = []
+    while True: # Loop for multiple rounds of Wordle to test how well the bot performs
+        # Reset all of the letters:
+        green_letters = []
+        green_positions = []
+        yellow_letters = []
+        yellow_positions = []
+        black_letters = []
+        guessed_words = []
 
-    guess = 'trace'
-    num_of_guesses = 0
+        guess = 'trace'
+        num_of_guesses = 0
 
-    while num_of_guesses < 6: # Game loop for 1 round of Wordle
-        print(f'\nThe guess is {guess}') # Print the next guess
-        enterGuess(guess) # Enter the next guess
+        while num_of_guesses < 6: # Game loop for 1 round of Wordle
+            print(f'\nThe guess is {guess}') # Print the next guess
+            enterGuess(guess) # Enter the next guess
 
-        clue = ''
-        for x in x_list: # Check for the colors of the pixels to get the clue
-            y = y_list[num_of_guesses]
-            clue += color(x, y)
-        clue = clue.upper()
-        
-        num_of_guesses += 1
-        print(f'The clue is {clue}')
+            clue = ''
+            for x in x_list: # Check for the colors of the pixels to get the clue
+                y = y_list[num_of_guesses]
+                clue += color(x, y)
+            clue = clue.upper()
+            
+            num_of_guesses += 1
+            print(f'The clue is {clue}')
 
-        if clue == 'GGGGG': # If all letters are green, you won
-            print('You won!\n\n------------------------------------')
-            restart()
-            break
+            if clue == 'GGGGG': # If all letters are green, you won
+                print('You won!\n\n------------------------------------')
+                restart()
+                break
 
-        guess = play(guess, clue, guessed_words, word_list, all_words, green_letters, green_positions, yellow_letters, yellow_positions, black_letters) # Find out the next guess
-        guessed_words.append(guess)
-        if guess == 'BREAK':
-            restart()
-            break
+            guess = play(guess, clue, guessed_words, word_list, all_words, green_letters, green_positions, yellow_letters, yellow_positions, black_letters) # Find out the next guess
+            guessed_words.append(guess)
+            if guess == 'BREAK':
+                restart()
+                break
+
+if __name__ == "__main__":
+    main()

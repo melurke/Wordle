@@ -250,7 +250,11 @@ def play(guess, num_of_guesses):
         print("You won!")
         return "STOPP"
 
-while num_of_guesses < 6:
-    guess = play(guess, num_of_guesses)
-    if guess == "STOPP":
-        break
+def main():
+    while num_of_guesses < 6:
+        guess = play(guess, num_of_guesses)
+        if guess == "STOPP":
+            break
+
+if __name__ == "__main__":
+    main()

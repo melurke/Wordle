@@ -99,24 +99,28 @@ def play(guess, clue, guessed_words, word_list, all_words, green_letters, green_
     clues.reverse()
     return clues[0][1] # The word with the highest number of different clues will be the next guess
 
-while True: # Loop for multiple rounds of Wordle to test how well the bot performs
-    # Reset all of the letters:
-    green_letters = []
-    green_positions = []
-    yellow_letters = []
-    yellow_positions = []
-    black_letters = []
-    guessed_words = []
+def main():
+    while True: # Loop for multiple rounds of Wordle to test how well the bot performs
+        # Reset all of the letters:
+        green_letters = []
+        green_positions = []
+        yellow_letters = []
+        yellow_positions = []
+        black_letters = []
+        guessed_words = []
 
-    guess = 'trace'
+        guess = 'trace'
 
-    while True: # Game loop for 1 round of Wordle
-        print(f'\nThe guess is {guess}') # Print the next guess
-        clue = input('What is the clue? ') # Get the clue from the player
-        if clue.upper() == 'GGGGG':
-            print('You won!\n\n------------------------------------')
-            break
-        guess = play(guess, clue, guessed_words, word_list, all_words, green_letters, green_positions, yellow_letters, yellow_positions, black_letters) # Find out the next guess
-        guessed_words.append(guess)
-        if guess == 'BREAK':
-            break
+        while True: # Game loop for 1 round of Wordle
+            print(f'\nThe guess is {guess}') # Print the next guess
+            clue = input('What is the clue? ') # Get the clue from the player
+            if clue.upper() == 'GGGGG':
+                print('You won!\n\n------------------------------------')
+                break
+            guess = play(guess, clue, guessed_words, word_list, all_words, green_letters, green_positions, yellow_letters, yellow_positions, black_letters) # Find out the next guess
+            guessed_words.append(guess)
+            if guess == 'BREAK':
+                break
+
+if __name__ == "__main__":
+    main()

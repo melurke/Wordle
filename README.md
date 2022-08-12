@@ -22,6 +22,8 @@ wordle_bot.py / filler_bot.py / filler_bot_2.py / filler_bot_final.py / good_bot
 
 automated_bot.py / automated_good_bot.py -> Automated versions from filler_bot_final.py and good_bot.py solving the game continuously (by pressing the buttons for you)
 
+/!\ The automated versions of the bot are designed to work for the website wordleunlimited.org and NOT for the official Wordle website. To play there, the manual version must be used /!\
+
 
 ## Performance
 
