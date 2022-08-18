@@ -2,11 +2,15 @@
 
 ## Files
 
-game.py -> The game of Wordle to play in the terminal
+### data/word_lists:
 
 word_list.txt -> List of words that can be the answer
 
 word_list_complete.txt -> List of all words including those that can be guessed but can't be the answer
+
+### Main files:
+
+game.py -> The game of Wordle to play in the terminal
 
 probability.py -> Program to calculate how often each letter is found in the word list
 
@@ -14,7 +18,13 @@ bot.py -> Bot for the game Wordle that can guess the answer (best version)
 
 automated_bot.py -> Bot from bot.py automated to press the buttons to play the game
 
+bot_hard.py -> Bot for the game Wordle that plays in hard mode
+
+automated_bot_hard.py -> Bot from bot_hard.py automated to press the buttons to play the game
+
 starting_word.py -> Program that calculates the best starting word for bot.py (the top 3 words are trace, salet and crate)
+
+### Old Bots:
 
 random_bot.py -> Bot for the game Wordle that guesses a random possible word
 

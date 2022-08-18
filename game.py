@@ -1,24 +1,33 @@
 import random
 
-def generateClue(guess, solution): # Return the clue the game would give on a guess for a given solution
+def GenerateClue(guess, solution): # Return the clue the game would give on a guess for a given solution
     solution_list = list(solution).copy()
-    clue = ""
+    yellows = []
+    clue = [""] * 5
     for index, letter in enumerate(guess):
         if letter == solution[index]:
-            clue += "G"
+            clue[index] = "G"
+            for yellow in yellows:
+                if yellow[1] == letter:
+                    clue[max(yellows)[0]] = "B"
+                    break
         elif letter in solution_list:
             solution_list.remove(letter)
-            clue += "Y"
+            clue[index] = "Y"
+            yellows.append([index, letter])
         else:
-            clue += "B"
-    return clue
+            clue[index] = "B"
+    clueStr = ""
+    for letter in clue:
+        clueStr += letter
+    return clueStr
 
-with open("data/word_lists/word_list.txt", "r") as file:
+with open("word_list.txt", "r") as file:
     word_list = []
     for line in file:
         word_list.append(line.strip())
 
-with open("data/word_lists/word_list_complete.txt", "r") as file:
+with open("word_list_complete.txt", "r") as file:
     word_list_complete = []
     for line in file:
         word_list_complete.append(line.strip())
@@ -26,7 +35,7 @@ with open("data/word_lists/word_list_complete.txt", "r") as file:
 word_list.sort()
 word_list_complete.sort()
 
-def main():
+def Main():
     while True:
         solution = random.choice(word_list)
         won_game = False
@@ -37,7 +46,7 @@ def main():
                 guess = input(f"\nWhat is your {num_of_guesses}. guess? ").lower()
                 if not guess in word_list_complete:
                     print("The guess is not valid. Please try again:")
-            clue = generateClue(guess, solution)
+            clue = GenerateClue(guess, solution)
             print(f"The clue is {clue}")
             if clue == "GGGGG":
                 print(f"Congratulations! You won the game in {num_of_guesses} guesses!")
@@ -48,6 +57,6 @@ def main():
         if not won_game:
             print(f"\nYou have run out of guesses! The solution was {solution}.")
         print("\n\n------------------------------------")
-
+    
 if __name__ == "__main__":
-    main()
+    Main()
