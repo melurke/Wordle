@@ -51,7 +51,7 @@ The average number of guesses per word from the 350 games played is around 3,51.
 <img src="data/images/data_hard.png">
 
 This data was gathered using the Bot from automated_bot_hard.py in the hard mode of Wordle.
-The average number of guesses per word from the 350 games played is around 3.51, which is almost identical to the bot in normal mode, meaning there doesn't seem to be a big difference between the two modes.
+The average number of guesses per word from the 350 games played is around 3.51, which is almost identical to the bot in normal mode, but the games are more spread out with there being games that are up to 6 turns long.
 
 ### Previous best bot
 
