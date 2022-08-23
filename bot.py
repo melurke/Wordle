@@ -82,13 +82,8 @@ def AddLetters(guess, clue): # Add all of the neccessary letters to the lists fo
 def GetPossibleSolutions(guessedWords, wordList, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters):
     possibleSolutions = []
     for word in wordList: # Check for all of the possible solutions with the new information from the clue
-        if Green(word, greenLetters, greenPositions) and Yellow(word, yellowLetters, yellowPositions) and Black(word, blackLetters, greenLetters):
+        if Green(word, greenLetters, greenPositions) and Yellow(word, yellowLetters, yellowPositions) and Black(word, blackLetters, greenLetters) and not word in guessedWords:
             possibleSolutions.append(word)
-    for word in guessedWords:
-        try:
-            possibleSolutions.remove(word) # Remove the words already guessed if neccessary (otherwise it can happen that the bot guesses the same word over and over again)
-        except:
-            pass
     return possibleSolutions
 
 def GetWordClues(possibleSolutions, allWords): # Go through all words and check how many different color-combinations can be formed with the possible solutions
@@ -96,7 +91,7 @@ def GetWordClues(possibleSolutions, allWords): # Go through all words and check 
     for word in allWords: 
         wordClues = []
         for solution in possibleSolutions:
-            currentClue = Colors(word, solution)
+            currentClue = Colors(solution, word)
             if not currentClue in wordClues:
                 wordClues.append(currentClue)
         clues.append([len(wordClues), word, wordClues])
@@ -123,7 +118,12 @@ def Play(guess, clue, guessedWords, wordList, allWords, greenLetters, greenPosit
         return possibleSolutions[0]
 
     clues = GetWordClues(possibleSolutions, allWords)
-    return clues[0][1] # The word with the highest number of different clues will be the next guess
+    for element in clues:
+        word = element[1]
+        if not word in guessedWords:
+            newGuess = word
+            break
+    return newGuess # The word with the highest number of different clues will be the next guess
 
 def Main():
     while True: # Loop for multiple rounds of Wordle to test how well the bot performs

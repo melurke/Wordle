@@ -54,7 +54,7 @@ def Main():
                 guess = input(f"\nWhat is your {num_of_guesses}. guess? ").lower()
                 if not guess in word_list_complete:
                     print("The guess is not valid. Please try again:")
-            clue = GenerateClue(guess, solution)
+            clue = GenerateClue(solution, guess)
             print(f"The clue is {clue}")
             if clue == "GGGGG":
                 print(f"Congratulations! You won the game in {num_of_guesses} guesses!")
