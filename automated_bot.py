@@ -181,6 +181,10 @@ def Main():
             num_of_guesses += 1
             print(f"The clue is {clue}")
 
+            if "N" in clue:
+                print("Oops! Something went wrong with the guess!")
+                return
+
             if clue == "GGGGG": # If all letters are green, you won
                 print("You won!\n\n------------------------------------")
                 Restart()
