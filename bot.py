@@ -25,23 +25,31 @@ def Black(word, blackLetters, greenLetters): # Check if a word contains none of 
                 return False
     return True
 
-def Colors(guess, solution): # Return the clue the game would give on a guess for a given solution
-    solutionList = list(solution).copy()
-    yellows = []
-    clue = [""] * 5
-    for index, letter in enumerate(guess):
-        if letter == solution[index]:
+def FindLetterPositions(word, letter): # Find all the positions a given letter is in a given word
+    positions = []
+    pos = word.find(letter)
+    while pos != -1:
+        positions.append(pos)
+        pos = word.find(letter, pos + 1)
+    return positions
+
+def Colors(solution, guess): # Return the clue the game would give on a guess for a given solution
+    clue = ["B"] * len(solution)
+    countedPos = []
+
+    for index, (solutionLetter, guessLetter) in enumerate(zip(solution, guess)):
+        if solutionLetter == guessLetter:
             clue[index] = "G"
-            for yellow in yellows:
-                if yellow[1] == letter:
-                    clue[max(yellows)[0]] = "B"
+            countedPos.append(index)
+
+    for index, letter in enumerate(guess):
+        if letter in solution and clue[index] != "G":
+            positions = FindLetterPositions(solution, letter)
+            for pos in positions:
+                if pos not in countedPos:
+                    clue[index] = "Y"
+                    countedPos.append(pos)
                     break
-        elif letter in solutionList:
-            solutionList.remove(letter)
-            clue[index] = "Y"
-            yellows.append([index, letter])
-        else:
-            clue[index] = "B"
     clueStr = ""
     for letter in clue:
         clueStr += letter
