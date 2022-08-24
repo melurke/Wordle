@@ -132,7 +132,7 @@ def Restart(): # Restart the game after winning or losing
         time.sleep(0.1)
     return
 
-def Play(guess, clue, guessedWords, wordList, all_words, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters): # Return the next guess
+def Play(guess, clue, guessedWords, wordList, all_words, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters, possibleSolutions=[]): # Return the next guess
     # Add all the letters from the clue:
     newLists = AddLetters(guess, clue)
     greenLetters += newLists[0]
@@ -141,18 +141,24 @@ def Play(guess, clue, guessedWords, wordList, all_words, greenLetters, greenPosi
     yellowPositions += newLists[3]
     blackLetters += newLists[4]
 
-    possibleSolutions = GetPossibleSolutions(guessedWords, wordList, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters)
+    if possibleSolutions == []:
+        possibleSolutions = GetPossibleSolutions(guessedWords, wordList, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters)
     print(f"Number of possible solutions: {len(possibleSolutions)}")
 
     if len(possibleSolutions) == 1: # Print the solution if there is only one left
         print(f"\nYou won! The solution is {possibleSolutions[0]}!\n\n------------------------------------")
         EnterGuess(possibleSolutions[0])
-        return "BREAK"
+        return ["BREAK", []]
     elif len(possibleSolutions) == 2: # If there are two or less solutions left, just return one of them
-        return possibleSolutions[0]
+        return [possibleSolutions[0], []]
 
     clues = GetWordClues(possibleSolutions, all_words)
-    return clues[0][1] # The word with the highest number of different clues will be the next guess
+    for element in clues:
+        word = element[1]
+        if not word in guessedWords:
+            newGuess = word
+            break
+    return [newGuess, clues] # The word with the highest number of different clues will be the next guess
 
 xList = [316, 408, 500, 592, 684]
 yList = [190, 284, 378, 472, 566, 660]
@@ -172,8 +178,26 @@ def Main():
         blackLetters = []
         guessedWords = []
 
-        guess = "trace"
         num_of_guesses = 0
+
+        guess = "trace"
+        print(f"\nThe guess is {guess}")
+        EnterGuess(guess)
+        clue = GetClue(num_of_guesses)
+        num_of_guesses += 1
+        print(f"The clue is {clue}")
+
+        if "N" in clue:
+            print("Oops! Something went wrong with the guess!")
+            return
+
+        if clue == "GGGGG": # If all letters are green, you won
+            print("You won!\n\n------------------------------------")
+            Restart()
+            pass
+
+        processGuess = Play(guess, clue, guessedWords, wordList, allWords, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters)
+        guess = processGuess[0]
 
         while num_of_guesses < 6: # Game loop for 1 round of Wordle
             print(f"\nThe guess is {guess}") # Print the next guess
@@ -193,7 +217,14 @@ def Main():
                 Restart()
                 break
 
-            guess = Play(guess, clue, guessedWords, wordList, allWords, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters) # Find out the next guess
+            possibleSolutions = []
+            for colors in processGuess[1]:
+                if colors[0] == clue:
+                    possibleSolutions = colors[1]
+                    break
+
+            processGuess = Play(guess, clue, guessedWords, wordList, allWords, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters, possibleSolutions) # Find out the next guess
+            guess = processGuess[0]
             guessedWords.append(guess)
             if guess == "BREAK":
                 Restart()

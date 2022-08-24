@@ -33,7 +33,7 @@ def FindLetterPositions(word, letter): # Find all the positions a given letter i
         pos = word.find(letter, pos + 1)
     return positions
 
-def Colors(solution, guess): # Return the clue the game would give on a guess for a given solution
+def GenerateClue(solution, guess): # Return the clue the game would give on a guess for a given solution
     clue = ["B"] * len(solution)
     countedPos = []
 
@@ -91,15 +91,21 @@ def GetWordClues(possibleSolutions, allWords): # Go through all words and check 
     for word in allWords: 
         wordClues = []
         for solution in possibleSolutions:
-            currentClue = Colors(solution, word)
-            if not currentClue in wordClues:
-                wordClues.append(currentClue)
+            currentClue = GenerateClue(solution, word)
+            isInWordClues = False
+            for wordClue in wordClues:
+                if wordClue[0] == currentClue:
+                    wordClue[1].append(solution)
+                    isInWordClues = True
+                    break
+            if not isInWordClues:
+                wordClues.append([currentClue, [solution]])
         clues.append([len(wordClues), word, wordClues])
     clues.sort()
     clues.reverse()
     return clues
 
-def Play(guess, clue, guessedWords, wordList, allWords, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters): # Return the next guess
+def Play(guess, clue, guessedWords, wordList, allWords, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters, possibleSolutions=[]): # Return the next guess
     # Add all the letters from the clue:
     newLists = AddLetters(guess, clue)
     greenLetters += newLists[0]
@@ -108,14 +114,15 @@ def Play(guess, clue, guessedWords, wordList, allWords, greenLetters, greenPosit
     yellowPositions += newLists[3]
     blackLetters += newLists[4]
 
-    possibleSolutions = GetPossibleSolutions(guessedWords, wordList, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters)
+    if possibleSolutions == []:
+        possibleSolutions = GetPossibleSolutions(guessedWords, wordList, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters)
     print(f"Number of possible solutions: {len(possibleSolutions)}")
 
     if len(possibleSolutions) == 1:
         print(f"You won! The solution is {possibleSolutions[0]}!\n\n------------------------------------")
-        return "BREAK"
+        return ["BREAK", []]
     elif len(possibleSolutions) == 2: # If there are two or less solutions left, just return one of them
-        return possibleSolutions[0]
+        return [possibleSolutions[0], []]
 
     clues = GetWordClues(possibleSolutions, allWords)
     for element in clues:
@@ -123,7 +130,7 @@ def Play(guess, clue, guessedWords, wordList, allWords, greenLetters, greenPosit
         if not word in guessedWords:
             newGuess = word
             break
-    return newGuess # The word with the highest number of different clues will be the next guess
+    return [newGuess, clues] # The word with the highest number of different clues will be the next guess
 
 def Main():
     while True: # Loop for multiple rounds of Wordle to test how well the bot performs
@@ -136,6 +143,13 @@ def Main():
         guessedWords = []
 
         guess = "trace"
+        print(f"\nThe guess is {guess}")
+        clue = input("What is the clue? ").upper()
+        if clue == "GGGGG":
+            print("You won!\n\n------------------------------------")
+            pass
+        processGuess = Play(guess, clue, guessedWords, wordList, all_words, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters)
+        guess = processGuess[0]
 
         while True: # Game loop for 1 round of Wordle
             print(f"\nThe guess is {guess}") # Print the next guess
@@ -143,7 +157,13 @@ def Main():
             if clue == "GGGGG":
                 print("You won!\n\n------------------------------------")
                 break
-            guess = Play(guess, clue, guessedWords, wordList, all_words, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters) # Find out the next guess
+            possibleSolutions = []
+            for colors in processGuess[1]:
+                if colors[0] == clue:
+                    possibleSolutions = colors[1]
+                    break
+            processGuess = Play(guess, clue, guessedWords, wordList, all_words, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters, possibleSolutions) # Find out the next guess
+            guess = processGuess[0]
             guessedWords.append(guess)
             if guess == "BREAK":
                 break
