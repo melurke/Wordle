@@ -37,25 +37,30 @@ automated_bot.py / automated_good_bot.py -> Automated versions from filler_bot_f
 
 ## Performance
 
-The data was gathered using the website worldeunlimited.org and the automated versions of the bots.
+The data was gathered using bot_tester.py which was slightly modified from the current state for the normal mode. This program goes through all possible solutions and plays every game with the bot, storing the information about how good the bot performed.
 
-### Current best bot
+### Normal Mode
 
-<img src="data/images/data_new.png">
+1: 1
+2: 51
+3: 1110
+4: 1032
+5: 115
+6: 4
 
-This data was gathered using the Bot from automated_bot.py.
-The average number of guesses per word from the 350 games played is around 3,51.
+Average: 3.528
 
-#### Hard Mode
+This data was gathered using the bot from bot.py.
 
-<img src="data/images/data_hard.png">
+### Hard Mode
 
-This data was gathered using the Bot from automated_bot_hard.py in the hard mode of Wordle.
-The average number of guesses per word from the 350 games played is around 3.51, which is almost identical to the bot in normal mode, but the games are more spread out with there being games that are up to 6 turns long.
+1: 1
+2: 149
+3: 1004
+4: 880
+5: 212
+6: 67
 
-### Previous best bot
+Average: 3.585
 
-<img src="data/images/data.png">
-
-This data was gathered with the Bot from automated_good_bot.py.
-The average number of guesses per word from the 309 games played is around 3,88.
+This data was gathered using the Bot from bot_hard.py in the hard mode of Wordle. The average number of guesses if pretty close to the one from normal mode, although a bit higher. The distribution of the guesses is way higher with more games taking 2, 5 or 6 guesses to be completed.

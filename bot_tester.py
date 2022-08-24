@@ -1,6 +1,4 @@
-import time
-
-startTime = time.time()
+from ast import literal_eval as strToList
 
 def FindLetterPositions(word, letter):
     positions = []
@@ -86,9 +84,9 @@ def GetPossibleSolutions(guessedWords, wordList, greenLetters, greenPositions, y
             possibleSolutions.append(word)
     return possibleSolutions
 
-def GetWordClues(possibleSolutions, allWords):
+def GetWordClues(possibleSolutions):
     clues = []
-    for word in allWords: 
+    for word in possibleSolutions: 
         wordClues = []
         for solution in possibleSolutions:
             currentClue = GenerateClue(solution, word)
@@ -105,7 +103,25 @@ def GetWordClues(possibleSolutions, allWords):
     clues.reverse()
     return clues
 
-def Play(guess, clue, guessedWords, wordList, allWords, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters, possibleSolutions=[]):
+def ProcessInitialGuess(guess, clue, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters):
+    newLists = AddLetters(guess, clue)
+    greenLetters += newLists[0]
+    greenPositions += newLists[1]
+    yellowLetters += newLists[2]
+    yellowPositions += newLists[3]
+    blackLetters += newLists[4]
+
+    with open("data/bot_help/guesses_hard.txt") as file:
+        clues = []
+        for line in file:
+            clues.append(strToList(line.strip()))
+    newGuess = ""
+    for line in clues:
+        if line[0] == clue:
+            newGuess = line[1]
+    return newGuess
+
+def Play(guess, clue, guessedWords, wordList, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters, possibleSolutions=[]):
     newLists = AddLetters(guess, clue)
     greenLetters += newLists[0]
     greenPositions += newLists[1]
@@ -119,7 +135,7 @@ def Play(guess, clue, guessedWords, wordList, allWords, greenLetters, greenPosit
     if len(possibleSolutions) == 1 or len(possibleSolutions) == 2:
         return [possibleSolutions[0], []]
 
-    clues = GetWordClues(possibleSolutions, allWords)
+    clues = GetWordClues(possibleSolutions)
     for element in clues:
         word = element[1]
         if not word in guessedWords:
@@ -159,46 +175,57 @@ def Main():
         yellowLetters = []
         yellowPositions = []
         blackLetters = []
-        guessedWords = []
         guesses = []
+        foundSolution = False
 
         guess = "trace"
+        guesses.append(guess)
         clue = GenerateClue(solution, guess)
-
         if clue == "GGGGG":
             games.append(1)
-            print(str(index / len(wordList) * 100)[0:5], solution, 1)
-            break
-        processGuess = Play(guess, clue, guessedWords, wordList, allWords, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters)
-        guess = processGuess[0]
+            print(str(index / len(wordList) * 100)[0:5], solution, 1, guesses)
+            foundSolution = True
 
-        for numOfGuesses in range(2, 7):
+        if not foundSolution:
+            guess = ProcessInitialGuess(guess, clue, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters)
             guesses.append(guess)
             clue = GenerateClue(solution, guess)
+            if clue == "GGGGG":
+                games.append(2)
+                print(str(index / len(wordList) * 100)[0:5], solution, 2, guesses)
+                foundSolution = True
 
-            if clue == "GGGGG" or numOfGuesses == 6:
-                if numOfGuesses == 6:
-                    sixes.append(solution)
-                games.append(numOfGuesses)
-                print(str(index / len(wordList) * 100)[0:5], solution, numOfGuesses)
-                break
+            if not foundSolution:
+                processGuess = Play(guess, clue, guesses, wordList, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters)
+                guess = processGuess[0]
 
-            possibleSolutions = []
-            for colors in processGuess[1]:
-                if colors[0] == clue:
-                    possibleSolutions = colors[1]
-                    break
+                for numOfGuesses in range(3, 7):
+                    clue = GenerateClue(solution, guess)
 
-            guessedWords.append(guess)
-            processGuess = Play(guess, clue, guessedWords, wordList, allWords, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters, possibleSolutions)
-            guess = processGuess[0]
+                    if clue == "GGGGG" or numOfGuesses == 6:
+                        if numOfGuesses == 6:
+                            sixes.append(solution)
+                        games.append(numOfGuesses)
+                        print(str(index / len(wordList) * 100)[0:5], solution, numOfGuesses, guesses)
+                        foundSolution = True
+                        break
+
+                    if not foundSolution:
+                        possibleSolutions = []
+                        for colors in processGuess[1]:
+                            if colors[0] == clue:
+                                possibleSolutions = colors[1]
+                                break
+
+                        processGuess = Play(guess, clue, guesses, wordList, greenLetters, greenPositions, yellowLetters, yellowPositions, blackLetters, possibleSolutions)
+                        guess = processGuess[0]
+                        guesses.append(guess)
 
     print(sixes)
     process = ProcessGames(games)
     for index, number in enumerate(process[1]):
         print(f"{index + 1}: {number}")
-    print(f"Average: {process[0]}") # 3.527453523562473
-    print("--- %s seconds ---" % (time.time() - startTime))
+    print(f"Average: {process[0]}")
 
 if __name__ == "__main__":
     Main()
