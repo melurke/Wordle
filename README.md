@@ -42,11 +42,17 @@ The data was gathered using bot_tester.py which was slightly modified from the c
 ### Normal Mode
 
 1: 1 -> 0.0432%
+
 2: 51 -> 2.2049%
+
 3: 1110 -> 47.9896%
+
 4: 1032 -> 44.6174%
+
 5: 115 -> 4.9719%
+
 6: 4 -> 0.1729%
+
 
 Average: 3.528
 
@@ -55,11 +61,17 @@ This data was gathered using the bot from bot.py.
 ### Hard Mode
 
 1: 1 -> 0.0432%
+
 2: 149 -> 6.4419%
+
 3: 1004 -> 43.4068%
+
 4: 880 -> 38.0458%
+
 5: 212 -> 9.1656%
+
 6: 67 -> 2.8967%
+
 
 Average: 3.585
 
