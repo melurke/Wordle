@@ -31,38 +31,38 @@ def GenerateClue(solution, guess):
     return clueStr
 
 with open("data/word_lists/word_list.txt", "r") as file:
-    word_list = []
+    wordList = []
     for line in file:
-        word_list.append(line.strip())
+        wordList.append(line.strip())
 
 with open("data/word_lists/word_list_complete.txt", "r") as file:
-    word_list_complete = []
+    wordListComplete = []
     for line in file:
-        word_list_complete.append(line.strip())
+        wordListComplete.append(line.strip())
 
-word_list.sort()
-word_list_complete.sort()
+wordList.sort()
+wordListComplete.sort()
 
 def Main():
     while True:
-        solution = random.choice(word_list)
-        won_game = False
+        solution = random.choice(wordList)
+        wonGame = False
 
-        for num_of_guesses in range(1, 7):
+        for numOfGuesses in range(1, 7):
             guess = ""
-            while not guess in word_list_complete:
-                guess = input(f"\nWhat is your {num_of_guesses}. guess? ").lower()
-                if not guess in word_list_complete:
+            while not guess in wordListComplete:
+                guess = input(f"\nWhat is your {numOfGuesses}. guess? ").lower()
+                if not guess in wordListComplete:
                     print("The guess is not valid. Please try again:")
             clue = GenerateClue(solution, guess)
             print(f"The clue is {clue}")
             if clue == "GGGGG":
-                print(f"Congratulations! You won the game in {num_of_guesses} guesses!")
-                won_game = True
+                print(f"Congratulations! You won the game in {numOfGuesses} guesses!")
+                wonGame = True
                 break
-            num_of_guesses += 1
+            numOfGuesses += 1
 
-        if not won_game:
+        if not wonGame:
             print(f"\nYou have run out of guesses! The solution was {solution}.")
         print("\n\n------------------------------------")
     
